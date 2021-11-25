@@ -62,23 +62,17 @@ function getGitHubPagesSiteType {
 
 # Gets the appropriate GitHub Pages branch name.
 #
-# This will always output `master` for User or Organization
-# repositories.
-#
 # Globals: $INPUT_GH_PAGES_PUBLISHING_SOURCE
 # Globals: $GITHUB_ACTOR
 # Globals: $gh_api_token
 #
 # Uses: callGitHubAPI
-# Uses: getGitHubPagesSiteType
 #
 # See:
 #     https://help.github.com/en/github/working-with-github-pages/about-github-pages#publishing-sources-for-github-pages-sites
 function getGitHubPagesPublishingSource {
     local br
-    if [ "user" = $(getGitHubPagesSiteType) ]; then
-        br="master"
-    elif [ -z "$INPUT_GH_PAGES_PUBLISHING_SOURCE" ]; then
+    if [ -z "$INPUT_GH_PAGES_PUBLISHING_SOURCE" ]; then
         br=$(callGitHubAPI -r repos -e pages -- -u "${GITHUB_ACTOR}:${gh_api_token}" | getFromJSON "source" "branch")
     else
         br="$INPUT_GH_PAGES_PUBLISHING_SOURCE"
